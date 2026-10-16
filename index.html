@@ -769,6 +769,8 @@ $("#confGo").onclick = async () => {
     return;
   }
   const btn = $("#confGo"); btn.disabled = true; btn.textContent = "Enviando…";
+  // La hora se toma al confirmar: las reglas rechazan pedidos con más de 10 minutos de diferencia.
+  o.t = Date.now();
   try {
     await setDoc(doc(FS, "pedidos", o.id), { ...o, uid: UID, estado: "nuevo", hist: { nuevo: o.t } });
     cart = []; render();
