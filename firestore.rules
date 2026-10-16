@@ -1,0 +1,64 @@
+rules_version = '2';
+
+// Reglas de seguridad de The King Burger's.
+// - Clientes: entran con sesión anónima automática. Pueden crear un pedido propio
+//   y leer solo sus pedidos (para ver el estado). No pueden modificarlos.
+// - Personal: entra con email y contraseña y su uid figura en la colección "staff".
+//   Lee todos los pedidos, cambia estados, precios y ajustes.
+// - La colección "staff" solo se edita desde la consola de Firebase.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function conSesion() {
+      return request.auth != null;
+    }
+
+    function esPersonal() {
+      return conSesion()
+        && exists(/databases/$(database)/documents/staff/$(request.auth.uid));
+    }
+
+    function textoCorto(v, max) {
+      return v is string && v.size() <= max;
+    }
+
+    // Un pedido nuevo de un cliente: suyo, en estado "nuevo", con forma razonable.
+    function pedidoValido(p) {
+      return p.uid == request.auth.uid
+        && p.estado == 'nuevo'
+        && !('demo' in p)
+        && p.keys().hasOnly(['id', 'num', 't', 'nombre', 'tel', 'entrega', 'dir', 'pago', 'pagaCon',
+                             'nota', 'items', 'subtotal', 'envio', 'pendientes', 'cerrado', 'total',
+                             'fueraDeHorario', 'uid', 'estado', 'hist'])
+        && p.id == request.resource.id
+        && p.t is number
+        && p.t > request.time.toMillis() - 10 * 60 * 1000
+        && p.t < request.time.toMillis() + 10 * 60 * 1000
+        && textoCorto(p.nombre, 80) && p.nombre.size() > 0
+        && textoCorto(p.tel, 30)
+        && p.entrega in ['delivery', 'retiro']
+        && textoCorto(p.dir, 200)
+        && textoCorto(p.nota, 500)
+        && p.items is list && p.items.size() > 0 && p.items.size() <= 40
+        && p.total is number && p.total >= 0;
+    }
+
+    match /config/{id} {
+      allow read: if true;
+      allow write: if esPersonal();
+    }
+
+    match /staff/{uid} {
+      allow read: if conSesion() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    match /pedidos/{id} {
+      allow read: if esPersonal()
+        || (conSesion() && resource.data.uid == request.auth.uid);
+      allow create: if esPersonal()
+        || (conSesion() && pedidoValido(request.resource.data));
+      allow update, delete: if esPersonal();
+    }
+  }
+}

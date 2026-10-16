@@ -1,0 +1,1218 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The King Burger's</title>
+<meta name="description" content="The King Burger's — Ciganda 650, San José. Hamburguesas, milanesas y pizzas. Pedí online y seguí tu pedido en vivo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..100,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: carta a la izquierda como lista de comanda, pedido fijo a la derecha (abajo en el celular). Un solo mundo oscuro, como su Instagram. */
+:root{
+  color-scheme: dark;
+  --carbon:#121110;      /* fondo, el negro de sus fotos */
+  --brasa:#1b1916;       /* superficies */
+  --linea:#2d2a26;       /* divisores */
+  --hueso:#eee8dd;       /* texto */
+  --gris:#958c80;        /* texto secundario, gris tibio */
+  --ambar:#f2a33a;       /* acento: el naranja de "La Dante" */
+  --ambar-osc:#1f1608;
+  --ok:#9bd36a;
+  --f-display:"Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --gutter:max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r:max(16px, env(safe-area-inset-right, 0px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--carbon); color:var(--hueso);
+  font-family:var(--f-body); font-size:16px; line-height:1.5;
+  font-variation-settings:"wdth" 100;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important; animation:none!important} }
+img{display:block; max-width:100%}
+button,input,select,textarea{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--ambar); outline-offset:2px}
+.wrap{max-width:1180px; margin:0 auto; padding-left:var(--gutter); padding-right:var(--gutter-r)}
+.mono{font-family:var(--f-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- cabecera ---------- */
+.top{border-bottom:1px solid var(--linea)}
+.top .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:14px}
+.brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit}
+.brand img{width:40px; height:40px; border-radius:50%}
+.brand span{font-family:var(--f-display); font-weight:800; font-variation-settings:"wdth" 70; font-size:20px; letter-spacing:.02em; text-transform:uppercase}
+.status{display:flex; align-items:center; gap:8px; color:var(--gris)}
+.status i{width:8px; height:8px; border-radius:50%; background:var(--gris)}
+.status.abierto i{background:var(--ok)}
+.status.abierto b{color:var(--hueso); font-weight:500}
+
+/* ---------- hero ---------- */
+.hero .wrap{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:clamp(24px,5vw,72px); align-items:end; padding-block:clamp(32px,6vw,72px) clamp(28px,4vw,48px)}
+.hero h1{
+  font-family:var(--f-display); font-weight:900; font-variation-settings:"wdth" 62;
+  font-size:clamp(58px,8.6vw,124px); line-height:.86; letter-spacing:-.01em; text-transform:uppercase;
+  margin:0 0 28px; text-wrap:balance;
+}
+.hero h1 em{font-style:normal; color:var(--ambar)}
+.hero p.lead{max-width:34ch; font-size:18px; color:var(--hueso); margin:0 0 28px}
+.facts{display:grid; grid-template-columns:repeat(3,auto); justify-content:start; gap:6px 36px; margin:0 0 32px; padding:0; list-style:none}
+.facts li{display:flex; flex-direction:column; gap:2px}
+.facts .mono{color:var(--gris)}
+.facts b{font-weight:500}
+.cta{display:inline-flex; align-items:center; gap:12px; background:var(--ambar); color:var(--ambar-osc); border:0; border-radius:2px; padding:14px 22px; font-weight:700; text-decoration:none; cursor:pointer}
+.cta:hover{filter:brightness(1.07)}
+.cta svg{width:18px; height:18px}
+.hero figure{margin:0; position:relative}
+.hero figure img{width:100%; height:auto; aspect-ratio:4/5; object-fit:cover}
+.hero figcaption{position:absolute; left:0; bottom:0; background:var(--carbon); padding:10px 14px 0 0; display:flex; flex-direction:column; gap:2px}
+.hero figcaption b{font-family:var(--f-display); font-variation-settings:"wdth" 70; font-weight:800; font-size:22px; text-transform:uppercase}
+.hero figcaption span{color:var(--gris); font-size:14px}
+
+/* ---------- navegación de categorías ---------- */
+.cats{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--carbon); border-top:1px solid var(--linea); border-bottom:1px solid var(--linea)}
+.cats .wrap{display:flex; gap:28px; overflow-x:auto; scrollbar-width:none}
+.cats .wrap::-webkit-scrollbar{display:none}
+.cats a{flex:none; padding-block:14px; color:var(--gris); text-decoration:none; border-bottom:2px solid transparent; margin-bottom:-1px}
+.cats a.on,.cats a:hover{color:var(--hueso); border-color:var(--ambar)}
+
+/* ---------- carta + pedido ---------- */
+.layout{display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:56px; align-items:start; padding-block:24px 96px}
+.sec{scroll-margin-top:64px; padding-top:28px}
+.sec-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; border-bottom:1px solid var(--hueso); padding-bottom:10px}
+.sec h2{font-family:var(--f-display); font-weight:900; font-variation-settings:"wdth" 62; font-size:clamp(40px,6vw,64px); line-height:.9; text-transform:uppercase; margin:0}
+.sec-head .mono{color:var(--gris)}
+.items{list-style:none; margin:0; padding:0}
+.item{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 20px; padding-block:20px; border-bottom:1px solid var(--linea)}
+.item.foto{grid-template-columns:120px minmax(0,1fr) auto}
+.item.foto img{grid-row:span 2; width:120px; height:120px; object-fit:cover}
+.item h3{margin:0; font-size:19px; font-weight:700; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.tag{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ambar); border:1px solid currentColor; padding:2px 6px; border-radius:2px; font-weight:400}
+.item p{margin:0; color:var(--gris); font-size:15px; max-width:52ch; grid-column:1}
+.item.foto p{grid-column:2}
+.item .precio{font-family:var(--f-mono); font-size:16px; text-align:right; white-space:nowrap}
+.add{grid-column:-2; justify-self:end; align-self:end; background:none; border:1px solid var(--linea); color:var(--hueso); border-radius:2px; padding:7px 14px; cursor:pointer; white-space:nowrap}
+.add:hover{border-color:var(--ambar); color:var(--ambar)}
+
+/* ---------- panel de pedido ---------- */
+.order{position:sticky; top:calc(env(safe-area-inset-top,0px) + 72px); background:var(--brasa); border:1px solid var(--linea); max-height:calc(100vh - 96px); display:flex; flex-direction:column}
+.order-head{display:flex; justify-content:space-between; align-items:baseline; padding:18px 20px 14px; border-bottom:1px dashed var(--linea)}
+.order-head h2{margin:0; font-family:var(--f-display); font-weight:900; font-variation-settings:"wdth" 62; font-size:32px; text-transform:uppercase; line-height:1}
+.order-head .mono{color:var(--gris)}
+.order-body{overflow-y:auto; padding:6px 20px 0; flex:1}
+.empty{color:var(--gris); padding-block:28px; font-size:15px}
+.line{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 12px; padding-block:14px; border-bottom:1px solid var(--linea)}
+.line b{font-weight:600}
+.line small{display:block; color:var(--gris); font-size:13px}
+.line .p{font-family:var(--f-mono); font-size:14px; text-align:right}
+.qty{display:flex; align-items:center; gap:2px}
+.qty button{width:28px; height:28px; border:1px solid var(--linea); background:none; border-radius:2px; cursor:pointer; line-height:1}
+.qty button:hover{border-color:var(--hueso)}
+.qty span{min-width:26px; text-align:center; font-family:var(--f-mono); font-size:14px}
+.form{display:grid; gap:14px; padding:18px 0 4px}
+.field{display:grid; gap:6px}
+.field label,.field legend{font-family:var(--f-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gris); padding:0}
+.field input,.field select,.field textarea{background:var(--carbon); border:1px solid var(--linea); border-radius:2px; padding:10px 12px; width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--ambar); outline:none}
+.field textarea{resize:vertical; min-height:60px}
+fieldset.field{border:0; margin:0; padding:0}
+.seg{display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--linea); border-radius:2px}
+.seg.tres{grid-template-columns:repeat(3,1fr)}
+.seg input{position:absolute; opacity:0; pointer-events:none}
+.seg label{text-align:center; padding:9px 6px; cursor:pointer; color:var(--gris); font-family:var(--f-body); font-size:14px; letter-spacing:0; text-transform:none}
+.seg label + input + label{border-left:1px solid var(--linea)}
+.seg input:checked + label{background:var(--hueso); color:var(--carbon); font-weight:600}
+.seg input:focus-visible + label{outline:2px solid var(--ambar); outline-offset:-2px}
+.totals{padding:14px 20px; border-top:1px dashed var(--linea); display:grid; gap:4px; font-family:var(--f-mono); font-size:14px}
+.totals div{display:flex; justify-content:space-between}
+.totals .t{font-size:18px; color:var(--hueso); padding-top:6px}
+.totals .s{color:var(--gris)}
+.send{margin:0 20px 20px; justify-content:center}
+.send[disabled]{opacity:.4; cursor:not-allowed; filter:none}
+.err{color:var(--ambar); font-size:13px; margin:0 20px 10px; min-height:0}
+
+/* ---------- barra y hoja en celular ---------- */
+.bar{display:none}
+.close-sheet{display:none}
+
+/* ---------- ficha de producto ---------- */
+dialog{background:var(--brasa); color:var(--hueso); border:1px solid var(--linea); padding:0; width:min(520px, calc(100vw - 32px)); max-height:calc(100vh - 48px)}
+dialog::backdrop{background:rgba(8,7,6,.72)}
+.sheet img{width:100%; height:220px; object-fit:cover; object-position:center 40%}
+.sheet-in{padding:22px; display:grid; gap:16px}
+.sheet h3{margin:0; font-family:var(--f-display); font-weight:900; font-variation-settings:"wdth" 62; font-size:40px; line-height:.95; text-transform:uppercase}
+.sheet p{margin:0; color:var(--gris)}
+.opts{display:grid; gap:0; border:1px solid var(--linea)}
+.field .opt{font-family:var(--f-body); font-size:15px; letter-spacing:0; text-transform:none; color:var(--hueso); padding:12px 14px}
+.opt{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 14px; cursor:pointer}
+.opt + .opt{border-top:1px solid var(--linea)}
+.opt input{accent-color:var(--ambar); width:18px; height:18px; margin:0 10px 0 0}
+.opt span:first-child{display:flex; align-items:center}
+.opt .mono{color:var(--gris)}
+.sheet-foot{display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px 22px; border-top:1px solid var(--linea)}
+.x{position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:50%; border:0; background:var(--carbon); cursor:pointer; font-size:20px; line-height:1}
+
+/* ---------- ticket de confirmación ---------- */
+.ticket{font-family:var(--f-mono); font-size:13px; line-height:1.55; white-space:pre-wrap; background:var(--hueso); color:#1a1714; padding:20px; margin:0 22px; max-height:46vh; overflow:auto;
+  -webkit-mask: radial-gradient(circle 5px at 50% 0, transparent 98%, #000) 0 0/14px 100% repeat-x;}
+
+/* ---------- seguimiento ---------- */
+.top-right{display:flex; align-items:center; gap:18px}
+.panel-link{color:var(--hueso); font-size:14px; border:1px solid var(--linea); padding:6px 12px; border-radius:2px; text-decoration:none}
+.panel-link:hover{border-color:var(--ambar)}
+.track-banner{background:var(--ambar); color:var(--ambar-osc)}
+.track-banner .wrap{display:flex; justify-content:space-between; align-items:center; gap:16px; padding-block:10px; font-weight:600}
+.track-banner .add{border-color:var(--ambar-osc); color:var(--ambar-osc)}
+.steps{list-style:none; margin:0; padding:0; display:grid; gap:0}
+.steps li{display:grid; grid-template-columns:22px 1fr auto; gap:12px; align-items:center; padding:10px 0; color:var(--gris); border-top:1px solid var(--linea)}
+.steps li i{width:12px; height:12px; border-radius:50%; border:2px solid var(--linea); justify-self:center}
+.steps li.hecho{color:var(--hueso)}
+.steps li.hecho i{background:var(--hueso); border-color:var(--hueso)}
+.steps li.actual{color:var(--hueso); font-weight:600}
+.steps li.actual i{background:var(--ambar); border-color:var(--ambar); box-shadow:0 0 0 4px rgba(242,163,58,.18)}
+.steps li span.mono{font-size:11px}
+.steps.cancelado li{opacity:.5}
+
+/* ---------- panel del local ---------- */
+.admin{padding-block:28px 80px}
+.admin-head{display:flex; justify-content:space-between; align-items:end; gap:16px; margin-bottom:20px}
+.admin-head h1{margin:4px 0 0; font-family:var(--f-display); font-weight:900; font-variation-settings:"wdth" 62; font-size:clamp(40px,6vw,64px); line-height:.9; text-transform:uppercase}
+.admin-head .add{text-decoration:none; grid-column:auto}
+.tabs{display:flex; gap:24px; border-bottom:1px solid var(--linea); margin-bottom:24px; overflow-x:auto; scrollbar-width:none}
+.tabs button{background:none; border:0; border-bottom:2px solid transparent; margin-bottom:-1px; padding:12px 0; color:var(--gris); cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:8px}
+.tabs button[aria-selected="true"]{color:var(--hueso); border-color:var(--ambar)}
+.badge{background:var(--ambar); color:var(--ambar-osc); font-family:var(--f-mono); font-size:11px; font-weight:500; border-radius:10px; padding:1px 7px}
+.aviso{background:var(--brasa); border:1px solid var(--linea); padding:12px 16px; color:var(--hueso); margin:0 0 20px}
+.board{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; align-items:start}
+.col h2{display:flex; justify-content:space-between; align-items:baseline; margin:0 0 12px; font-size:15px; font-weight:600}
+.col h2 .mono{color:var(--gris)}
+.col-empty{color:var(--gris); font-size:14px; border:1px dashed var(--linea); padding:18px; text-align:center}
+.cards{display:grid; gap:12px}
+.card{background:var(--brasa); border:1px solid var(--linea); padding:14px; display:grid; gap:10px}
+.card.nuevo{border-color:var(--ambar)}
+.card-top{display:flex; justify-content:space-between; gap:10px; align-items:baseline}
+.card-top b{font-family:var(--f-mono); font-size:15px}
+.card-top span{color:var(--gris); font-size:13px}
+.card .quien{font-size:14px}
+.card .quien small{display:block; color:var(--gris)}
+.card ul{list-style:none; margin:0; padding:10px 0; border-block:1px dashed var(--linea); display:grid; gap:4px; font-size:14px}
+.card ul small{color:var(--ambar); display:block; padding-left:22px}
+.card ul .ex{color:var(--gris)}
+.card-foot{display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap}
+.card-foot .tot{font-family:var(--f-mono)}
+.card-foot .acts{display:flex; gap:6px; flex-wrap:wrap}
+.btn{background:none; border:1px solid var(--linea); color:var(--hueso); border-radius:2px; padding:7px 12px; cursor:pointer; font-size:14px; text-decoration:none}
+.btn:hover{border-color:var(--hueso)}
+.btn.prim{background:var(--hueso); color:var(--carbon); border-color:var(--hueso); font-weight:600}
+.btn.peligro{color:var(--gris)}
+.btn.peligro:hover{color:var(--hueso); border-color:#c8553d}
+.pill{font-family:var(--f-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; border:1px solid var(--linea); padding:2px 7px; border-radius:2px; color:var(--gris)}
+.pill.demo{color:var(--ambar); border-color:var(--ambar)}
+.hist{margin-top:36px}
+.hist h2{font-size:15px; font-weight:600; margin:0 0 10px}
+.tbl-wrap{overflow-x:auto}
+table.tbl{width:100%; border-collapse:collapse; font-size:14px}
+.tbl th{text-align:left; font-family:var(--f-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--gris); font-weight:400; padding:8px 10px; border-bottom:1px solid var(--linea)}
+.tbl td{padding:10px; border-bottom:1px solid var(--linea); vertical-align:top}
+.tbl .r{text-align:right; font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+.kpis{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:var(--linea); border:1px solid var(--linea); margin-bottom:28px}
+.kpi{background:var(--carbon); padding:16px 18px; display:grid; gap:4px}
+.kpi .mono{color:var(--gris); font-size:11px}
+.kpi b{font-family:var(--f-display); font-variation-settings:"wdth" 70; font-weight:800; font-size:34px; line-height:1}
+.kpi small{color:var(--gris); font-size:13px}
+.periodo{display:flex; gap:6px; margin-bottom:18px}
+.periodo .btn[aria-pressed="true"]{background:var(--hueso); color:var(--carbon); border-color:var(--hueso)}
+.chart{background:var(--brasa); border:1px solid var(--linea); padding:18px 18px 10px; margin-bottom:28px}
+.chart h2{margin:0 0 2px; font-size:15px; font-weight:600}
+.chart p{margin:0 0 14px; color:var(--gris); font-size:13px}
+.bars{display:flex; align-items:flex-end; gap:2px; height:180px; border-bottom:1px solid var(--gris); position:relative}
+.bars .b{flex:1; min-width:0; height:100%; display:flex; align-items:flex-end; position:relative; cursor:default}
+.bars .b span{display:block; width:100%; background:var(--ambar); border-radius:4px 4px 0 0; min-height:0}
+.bars .b:hover span,.bars .b:focus span{filter:brightness(1.15)}
+.bars .b .tip{position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:var(--hueso); color:var(--carbon); font-family:var(--f-mono); font-size:12px; padding:5px 8px; white-space:nowrap; pointer-events:none; opacity:0; z-index:2}
+.bars .b:hover .tip,.bars .b:focus .tip{opacity:1}
+.bars .b .tip{bottom:auto; top:-34px}
+.xlab{display:flex; gap:2px; margin-top:6px}
+.xlab span{flex:1; min-width:0; text-align:center; font-family:var(--f-mono); font-size:10px; color:var(--gris); overflow:hidden}
+.grid2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px}
+.hbar{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 12px; padding:8px 0; border-bottom:1px solid var(--linea); font-size:14px}
+.hbar .track{grid-column:1 / -1; height:6px; background:var(--brasa); border-radius:3px; overflow:hidden}
+.hbar .track span{display:block; height:100%; background:var(--ambar); border-radius:3px}
+.hbar .v{font-family:var(--f-mono); color:var(--gris)}
+.carta-cat{margin-bottom:28px}
+.carta-cat h2{font-family:var(--f-display); font-weight:900; font-variation-settings:"wdth" 62; font-size:30px; text-transform:uppercase; margin:0 0 6px}
+.crow{display:grid; grid-template-columns:minmax(0,1fr) 130px auto; gap:12px; align-items:center; padding:10px 0; border-bottom:1px solid var(--linea)}
+.crow input{background:var(--carbon); border:1px solid var(--linea); border-radius:2px; padding:8px 10px; width:100%; font-family:var(--f-mono); text-align:right}
+.crow input:focus{border-color:var(--ambar); outline:none}
+.crow.agotado .nom{color:var(--gris); text-decoration:line-through}
+.toggle{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--gris); cursor:pointer; white-space:nowrap}
+.toggle input{accent-color:var(--ambar); width:16px; height:16px}
+.savebar{position:sticky; bottom:0; background:var(--carbon); border-top:1px solid var(--linea); padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px)); display:flex; justify-content:space-between; align-items:center; gap:12px}
+.savebar span{color:var(--gris); font-size:14px}
+.ajustes{display:grid; gap:28px; max-width:620px}
+.ajustes section{display:grid; gap:12px; padding-bottom:24px; border-bottom:1px solid var(--linea)}
+.ajustes h2{margin:0; font-size:17px}
+.ajustes p{margin:0; color:var(--gris); font-size:14px}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.item.agotado h3,.item.agotado .precio{color:var(--gris)}
+.add[disabled]{opacity:.45; cursor:not-allowed}
+.add[disabled]:hover{border-color:var(--linea); color:var(--hueso)}
+@media (max-width: 960px){
+  .board{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+}
+@media (max-width: 720px){
+  .panel-link{font-size:12px; padding:5px 8px}
+  .top-right{gap:10px}
+  .crow{grid-template-columns:minmax(0,1fr) 96px; }
+  .crow .toggle{grid-column:1 / -1}
+}
+
+footer{border-top:1px solid var(--linea)}
+footer .wrap{display:flex; flex-wrap:wrap; justify-content:space-between; gap:24px; padding-block:40px; color:var(--gris); font-size:14px}
+footer b{color:var(--hueso); display:block; font-weight:600; margin-bottom:4px}
+footer a{color:var(--hueso)}
+.demo{color:var(--gris)}
+
+@media (max-width: 960px){
+  .layout{grid-template-columns:minmax(0,1fr); gap:0}
+  .order{display:none; position:fixed; inset:0; top:0; max-height:none; z-index:20; border:0; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px)}
+  body.ver-pedido .order{display:flex}
+  body.ver-pedido{overflow:hidden}
+  .close-sheet{display:block; background:none; border:1px solid var(--linea); border-radius:2px; padding:6px 12px; cursor:pointer; font-size:14px; white-space:nowrap}
+  #orderCount{display:none}
+  .order-head{align-items:center}
+  .bar{position:fixed; left:0; right:0; bottom:0; z-index:10; display:flex; padding:12px var(--gutter-r) calc(12px + env(safe-area-inset-bottom,0px)) var(--gutter); background:var(--carbon); border-top:1px solid var(--linea)}
+  .bar .cta{width:100%; justify-content:space-between}
+  .bar[hidden]{display:none!important}
+}
+@media (max-width: 720px){
+  .hero .wrap{grid-template-columns:1fr}
+  .hero figure{order:-1}
+  .hero h1{font-size:15.5vw}
+  .hero figure img{aspect-ratio:4/3; object-position:center 70%}
+  .brand span{font-size:17px}
+  .brand img{width:34px; height:34px}
+  .status{font-size:10.5px; text-align:right; max-width:13ch}
+  .facts{grid-template-columns:1fr 1fr}
+  .item.foto{grid-template-columns:84px minmax(0,1fr)}
+  .item.foto img{width:84px; height:84px; grid-row:span 3}
+  .item.foto .precio{grid-column:2; text-align:left}
+  .item.foto p{grid-column:2}
+  .item.foto .add{grid-column:2; justify-self:start}
+  .item:not(.foto) .add{grid-column:2}
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">
+      <img src="img/logo.jpg" alt="Logo de The King Burger's" width="40" height="40">
+      <span>The King Burger's</span>
+    </a>
+    <div class="top-right">
+      <div class="status mono" id="status"><i></i><span>Calculando horario</span></div>
+      <a class="panel-link" id="panelLink" href="#panel" hidden>Panel del local</a>
+    </div>
+  </div>
+</header>
+
+<div class="track-banner" id="trackBanner" hidden>
+  <div class="wrap"><span id="trackBannerText">Tu pedido está en camino</span><button type="button" class="add" id="trackOpen">Ver estado</button></div>
+</div>
+
+<section class="admin" id="login" hidden aria-label="Ingreso del personal">
+  <div class="wrap" style="max-width:440px">
+    <span class="mono" style="color:var(--gris)">Panel del local</span>
+    <h1 style="font-family:var(--f-display);font-weight:900;font-variation-settings:'wdth' 62;font-size:48px;line-height:.9;text-transform:uppercase;margin:6px 0 20px">Ingreso del personal</h1>
+    <form class="form" id="loginForm" novalidate>
+      <div class="field"><label for="l-email">Email</label><input id="l-email" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="l-pass">Contraseña</label><input id="l-pass" type="password" autocomplete="current-password" required></div>
+      <p class="err" id="loginErr" hidden style="margin:0"></p>
+      <button class="cta" type="submit" id="loginBtn" style="justify-content:center">Entrar al panel</button>
+      <a href="#" style="color:var(--gris);font-size:14px">Volver a la tienda</a>
+    </form>
+  </div>
+</section>
+
+<section class="admin" id="admin" hidden aria-label="Panel del local">
+  <div class="wrap">
+    <div class="admin-head">
+      <div>
+        <span class="mono" style="color:var(--gris)">Panel del local</span>
+        <h1>Pedidos y ventas</h1>
+      </div>
+      <div style="display:flex; gap:8px">
+        <a class="add" href="#" id="toShop">Ver la tienda</a>
+        <button type="button" class="add" id="logout">Salir</button>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Secciones del panel">
+      <button role="tab" type="button" data-tab="pedidos" aria-selected="true">Pedidos <span class="badge num" id="badgeNuevos" hidden>0</span></button>
+      <button role="tab" type="button" data-tab="ventas" aria-selected="false">Ventas</button>
+      <button role="tab" type="button" data-tab="carta" aria-selected="false">Carta y precios</button>
+      <button role="tab" type="button" data-tab="ajustes" aria-selected="false">Ajustes</button>
+    </nav>
+    <p class="aviso" id="adminAviso" hidden></p>
+    <div class="tabpanel" id="tab-pedidos"></div>
+    <div class="tabpanel" id="tab-ventas" hidden></div>
+    <div class="tabpanel" id="tab-carta" hidden></div>
+    <div class="tabpanel" id="tab-ajustes" hidden></div>
+  </div>
+</section>
+
+<div id="shop">
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Hamburguesas<br>de <em>la casa</em>,<br>a tu puerta.</h1>
+      <p class="lead">Elegí de la carta, hacé tu pedido acá mismo y seguí en vivo cuándo entra a la cocina y cuándo sale para tu casa.</p>
+      <ul class="facts">
+        <li><span class="mono">Dirección</span><b>Ciganda 650, San José</b></li>
+        <li><span class="mono">Cocina abierta</span><b class="num">20:30 a 00:00</b></li>
+        <li><span class="mono">Delivery</span><b>Toda la ciudad</b></li>
+      </ul>
+      <a class="cta" href="#burgers">Ver la carta
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v12m0 0l-5-5m5 5l5-5" stroke="currentColor" stroke-width="1.8"/></svg>
+      </a>
+    </div>
+    <figure>
+      <img src="img/burger-papas.jpg" alt="Hamburguesa Mega Boom con doble carne, cheddar, bacon y huevo, con fritas" width="480" height="640">
+      <figcaption><b>Mega Boom · $470</b><span>Doble carne, baño de cheddar y bacon, huevo</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<nav class="cats" aria-label="Categorías de la carta">
+  <div class="wrap" id="cats"></div>
+</nav>
+
+<div class="wrap layout">
+  <main id="menu"></main>
+
+  <aside class="order" id="order" aria-label="Tu pedido">
+    <div class="order-head">
+      <h2>Tu pedido</h2>
+      <span class="mono num" id="orderCount">0 productos</span>
+      <button class="close-sheet" type="button" id="closeSheet">Seguir eligiendo</button>
+    </div>
+    <div class="order-body">
+      <div id="lines"></div>
+      <form class="form" id="form" novalidate>
+        <div class="field"><label for="f-nombre">Nombre</label><input id="f-nombre" name="nombre" autocomplete="given-name" placeholder="¿A nombre de quién?"></div>
+        <div class="field"><label for="f-tel">Celular</label><input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="09X XXX XXX, por si hay que avisarte"></div>
+        <fieldset class="field">
+          <legend>Entrega</legend>
+          <div class="seg">
+            <input type="radio" name="entrega" id="e-delivery" value="delivery" checked><label for="e-delivery">Delivery</label>
+            <input type="radio" name="entrega" id="e-retiro" value="retiro"><label for="e-retiro">Retiro en local</label>
+          </div>
+        </fieldset>
+        <div class="field" id="dirField"><label for="f-dir">Dirección</label><input id="f-dir" name="dir" autocomplete="street-address" placeholder="Calle, número, esquina"></div>
+        <fieldset class="field">
+          <legend>Pago</legend>
+          <div class="seg tres">
+            <input type="radio" name="pago" id="p-efectivo" value="Efectivo" checked><label for="p-efectivo">Efectivo</label>
+            <input type="radio" name="pago" id="p-transf" value="Transferencia"><label for="p-transf">Transferencia</label>
+            <input type="radio" name="pago" id="p-pos" value="Tarjeta (POS)"><label for="p-pos">Tarjeta</label>
+          </div>
+        </fieldset>
+        <div class="field" id="vueltoField"><label for="f-vuelto">¿Con cuánto pagás?</label><input id="f-vuelto" name="vuelto" inputmode="numeric" placeholder="Ej: 2000, así llevamos cambio"></div>
+        <div class="field"><label for="f-nota">Aclaraciones</label><textarea id="f-nota" name="nota" placeholder="Timbre roto, apto 3, etc."></textarea></div>
+      </form>
+    </div>
+    <div class="totals num" id="totals"></div>
+    <p class="err" id="err" hidden></p>
+    <button class="cta send" type="button" id="send" disabled>Hacer el pedido</button>
+  </aside>
+</div>
+
+<div class="bar" id="bar" hidden>
+  <button class="cta" type="button" id="openSheet"><span id="barCount">Ver pedido</span><span class="mono num" id="barTotal">$0</span></button>
+</div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div><b>The King Burger's</b>Cocina gourmet en San José desde 2020.</div>
+    <div><b>Local</b>Ciganda 650, San José de Mayo</div>
+    <div><b>Horario</b><span class="num">Todos los días, 20:30 a 00:00</span></div>
+    <div><b>Seguinos</b><a href="https://www.instagram.com/thekingburgers_/" target="_blank" rel="noopener">@thekingburgers_</a></div>
+    <div class="demo mono" style="flex-basis:100%; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap"><span>Precios de la carta publicada en Instagram</span><a href="#panel" style="color:var(--gris)">Acceso del personal</a></div>
+  </div>
+</footer>
+
+<dialog id="sheet" aria-labelledby="sheetTitle">
+  <form method="dialog" class="sheet" id="sheetForm"></form>
+</dialog>
+
+<dialog id="confirm" aria-labelledby="confTitle">
+  <div class="sheet">
+    <div class="sheet-in"><h3 id="confTitle">Revisá tu pedido</h3><p id="confText">Así le llega a la cocina. Si está todo bien, confirmalo.</p></div>
+    <pre class="ticket" id="ticket"></pre>
+    <p class="err" id="confErr" hidden></p>
+    <div class="sheet-foot">
+      <button type="button" class="add" id="confBack" style="grid-column:auto">Corregir</button>
+      <button type="button" class="cta" id="confGo">Confirmar pedido</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="track" aria-labelledby="trackTitle">
+  <div class="sheet">
+    <div class="sheet-in">
+      <span class="mono" style="color:var(--gris)" id="trackNum"></span>
+      <h3 id="trackTitle">Recibimos tu pedido</h3>
+      <p id="trackSub">Esta pantalla se actualiza sola.</p>
+      <ol class="steps" id="trackSteps"></ol>
+      <pre class="ticket" id="trackTicket" style="margin:0"></pre>
+    </div>
+    <div class="sheet-foot">
+      <span class="mono" style="color:var(--gris)">Ciganda 650, San José</span>
+      <button type="button" class="cta" id="trackClose">Listo</button>
+    </div>
+  </div>
+</dialog>
+
+<script type="module">
+import { firebaseConfig } from "./firebase-config.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInAnonymously, signInWithEmailAndPassword, signOut, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, connectFirestoreEmulator, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// Número de WhatsApp de respaldo (ejemplo; se cambia desde el panel → Ajustes)
+const WHATSAPP = "59899000000";
+const ABRE = 20*60+30, CIERRA = 24*60; // minutos, hora de Uruguay
+
+// Carta y precios tomados de las historias destacadas "MENÚ" de @thekingburgers_ (abril y julio 2025).
+// p:null = sin precio publicado; se agrega al pedido como "a confirmar".
+const P1P2 = extra => [{g:"Porción", t:"radio", o:[["Para 1",0],["Para 2",extra]]}];
+const MENU = [
+  { id:"burgers", nombre:"Hamburguesas", nota:"Todas con fritas", items:[
+    { id:"tentadora", n:"Tentadora", d:"Pan brioche, hamburguesa, cheddar, bacon, cebolla cruda y ketchup.", p:310 },
+    { id:"megaboom", n:"Mega Boom", d:"Baño de cheddar y bacon. Doble carne, cheddar, bacon, huevo a la plancha, cebolla caramelizada y ketchup.", p:470, img:"img/burger-papas.jpg", tag:"La más cargada" },
+    { id:"king", n:"King", d:"Pan cheese buns, doble carne, muzzarella, cheddar, bacon, cebolla caramelizada y aderezos.", p:400, img:"img/neon.jpg" },
+    { id:"simple", n:"The Simple", d:"Pan cheese buns, hamburguesa, cheddar, bacon, cebolla caramelizada y aderezos.", p:310 },
+    { id:"clasica", n:"Clásica", d:"Pan brioche, hamburguesa, jamón, muzzarella, bacon, cebolla caramelizada, huevo a la plancha, lechuga, tomate, ketchup y mayonesa.", p:350 },
+    { id:"doblemeat", n:"Doble Meat", d:"Pan cheese buns, doble carne, cheddar, bacon, cebolla caramelizada, huevo a la plancha, lechuga, tomate y aderezos.", p:400 },
+    { id:"cheese", n:"Cheese Burger", d:"Pan cheese buns, hamburguesa, cheddar, bacon, cebolla caramelizada, huevo a la plancha, lechuga, tomate y aderezos.", p:350 },
+    { id:"veggie", n:"Tortilla veggie", d:"Tortilla de papa rellena de muzzarella y cheddar, lechuga, tomate, cheddar y aderezos.", p:350 },
+  ]},
+  { id:"pollo", nombre:"Línea pollo", nota:"Todas con fritas", items:[
+    { id:"crispy", n:"Crispy Chicken", d:"Pan brioche, pollo crispy, cheddar, bacon, lechuga, tomate, mayonesa y ketchup.", p:400, img:"img/marinera.jpg" },
+    { id:"americana", n:"La Americana", d:"Pan brioche, medallón de pollo, cheddar, bacon, lechuga, cebolla, ketchup y mostaza.", p:380 },
+    { id:"urbana", n:"La Urbana", d:"Pan brioche, medallón de pollo, jamón, muzza, bacon, lechuga, tomate, mayonesa y ketchup.", p:380 },
+  ]},
+  { id:"chivitos", nombre:"Chivitos", nota:"Todos con fritas", items:[
+    { id:"chivito", n:"Chivito tradicional", d:"Pan, carne de nalga al rojo, jamón, muzzarella, panceta, huevo a la plancha, cebolla y morrón salteados, lechuga, tomate, mayonesa y ketchup.", p:460 },
+    { id:"chivito-cheddar", n:"Chivito extra cheddar", d:"El tradicional con fetas de cheddar.", p:500 },
+    { id:"chivito-plato", n:"Chivito al plato", d:"Carne de nalga al rojo, jamón, muzzarella, panceta, huevo a la plancha, cebolla y morrón salteados, lechuga, tomate, mayonesa y ketchup.", p:410, img:"img/al-plato.jpg" },
+  ]},
+  { id:"milanesas", nombre:"Milanesas", nota:"Todas con fritas", items:[
+    { id:"mila-pan", n:"Milanesa al pan", d:"Pan, milanesa de nalga, jamón, muzzarella, bacon, huevo a la plancha, salteado de cebolla y morrón, lechuga, tomate, mayonesa y ketchup.", p:500, opts:P1P2(260) },
+    { id:"mega-mila", n:"Mega milanesa", d:"Milanesa bañada en cheddar y bacon, con huevo a la plancha.", p:500, img:"img/milanesa.jpg", opts:P1P2(300) },
+    { id:"napolitana", n:"Napolitana", d:"Milanesa con jamón, muzzarella y salsa.", p:520, opts:P1P2(280) },
+  ]},
+  { id:"entradas", nombre:"Entradas", nota:"Para compartir", items:[
+    { id:"fritas", n:"Porción de fritas", d:"", p:200 },
+    { id:"fritas-cb", n:"Fritas cheddar y bacon", d:"", p:350 },
+    { id:"fritas-c", n:"Fritas cheddar", d:"", p:300 },
+    { id:"fritas-full", n:"Fritas completas", d:"", p:400 },
+    { id:"nuggets", n:"Nuggets de pollo con fritas", d:"", p:300 },
+    { id:"gramajo", n:"Gramajo", d:"", p:350, opts:P1P2(150) },
+  ]},
+  { id:"infantil", nombre:"Menú infantil", nota:"Cajita feliz", items:[
+    { id:"cajita-burger", n:"Cajita feliz hamburguesa", d:"Hamburguesa, jugo y fritas.", p:300 },
+    { id:"cajita-nuggets", n:"Cajita feliz nuggets", d:"Nuggets, jugo y fritas.", p:300 },
+  ]},
+  { id:"bebidas", nombre:"Bebidas", nota:"Precio a confirmar", items:[
+    { id:"refresco", n:"Refresco 600 ml", d:"", p:null, opts:[{g:"Sabor", t:"radio", o:[["Coca-Cola",0],["Pomelo",0],["Fanta",0],["Sprite",0]]}] },
+    { id:"agua", n:"Agua sin gas 600 ml", d:"", p:null },
+    { id:"cerveza", n:"Cerveza", d:"Consultar stock.", p:null },
+    { id:"fernet", n:"Fernet", d:"", p:null },
+    { id:"jagger", n:"Jagger", d:"", p:null },
+  ]},
+];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const plata = n => "$" + Math.round(n).toLocaleString("es-UY");
+const allItems = Object.fromEntries(MENU.flatMap(c => c.items.map(i => [i.id, i])));
+const TZ = "America/Montevideo";
+const diaDe = t => new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(new Date(t));
+const horaDe = t => new Intl.DateTimeFormat("es-UY", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(t));
+
+// ---- configuración del local (la edita el panel) ----
+let CFG = { modo: "auto", abre: "20:30", cierra: "00:00", envio: null, whatsapp: WHATSAPP, precios: {}, agotados: [] };
+const precioBase = it => (CFG.precios && CFG.precios[it.id] != null) ? CFG.precios[it.id] : it.p;
+const agotado = id => (CFG.agotados || []).includes(id);
+const envio = () => (typeof CFG.envio === "number" ? CFG.envio : null);
+
+// ---- carta ----
+$("#cats").innerHTML = MENU.map(c => `<a href="#${c.id}" data-cat="${c.id}">${c.nombre}</a>`).join("");
+function precioTxt(i){
+  const p = precioBase(i);
+  if (p == null) return "Consultar";
+  if (i.opts && i.opts[0].g === "Porción") return `p/1 ${plata(p)}<br>p/2 ${plata(p + i.opts[0].o[1][1])}`;
+  return plata(p);
+}
+function renderCarta(){
+  $("#menu").innerHTML = MENU.map(c => `
+  <section class="sec" id="${c.id}">
+    <div class="sec-head"><h2>${c.nombre}</h2><span class="mono">${c.nota}</span></div>
+    <ul class="items">${c.items.map(i => { const ag = agotado(i.id); return `
+      <li class="item${i.img ? " foto" : ""}${ag ? " agotado" : ""}">
+        ${i.img ? `<img src="${i.img}" alt="" loading="lazy" width="120" height="120">` : ""}
+        <h3>${i.n}${ag ? ` <span class="tag" style="color:var(--gris)">Agotado</span>` : i.tag ? ` <span class="tag">${i.tag}</span>` : ""}</h3>
+        <span class="precio num">${precioTxt(i)}</span>
+        <p>${i.d}</p>
+        <button class="add" type="button" data-id="${i.id}" aria-label="Agregar ${i.n}" ${ag ? "disabled" : ""}>${ag ? "Agotado" : "Agregar"}</button>
+      </li>`; }).join("")}
+    </ul>
+  </section>`).join("");
+  document.querySelectorAll(".sec").forEach(s => io.observe(s));
+}
+const links = [...document.querySelectorAll(".cats a")];
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) links.forEach(a => a.classList.toggle("on", a.dataset.cat === e.target.id));
+}), { rootMargin: "-40% 0px -55% 0px" });
+
+// ---- horario ----
+const aMin = s => { const [h, m] = String(s || "0:0").split(":").map(Number); return (h % 24) * 60 + (m || 0); };
+function horaUY(){
+  const p = new Intl.DateTimeFormat("es-UY", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date());
+  return (+p.find(x => x.type === "hour").value % 24) * 60 + +p.find(x => x.type === "minute").value;
+}
+function enHorario(){
+  const t = horaUY(), a = aMin(CFG.abre), c = aMin(CFG.cierra);
+  return c > a ? (t >= a && t < c) : (t >= a || t < c);
+}
+const pausado = () => CFG.modo === "pausado";
+const abierto = () => CFG.modo === "abierto" || (CFG.modo !== "pausado" && enHorario());
+function pintarHorario(){
+  const el = $("#status"), ab = abierto();
+  el.classList.toggle("abierto", ab);
+  el.querySelector("span").innerHTML = pausado() ? "Pedidos en pausa"
+    : ab ? `<b>Abierto</b> · cierra ${esc(CFG.cierra)}` : `Cerrado · abre a las ${esc(CFG.abre)}`;
+  document.querySelectorAll(".facts b.num")[0].textContent = `${CFG.abre} a ${CFG.cierra}`;
+}
+setInterval(pintarHorario, 60000);
+
+// ---- carrito ----
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("kb-pedido") || "[]").filter(l => allItems[l.id]); } catch(e) {}
+const guardar = () => { try { localStorage.setItem("kb-pedido", JSON.stringify(cart)); } catch(e) {} };
+const precio = (u, q = 1) => u == null ? "A confirmar" : plata(u * q);
+const subtotal = () => cart.reduce((s, l) => s + (l.unit == null ? 0 : l.unit * l.q), 0);
+const pendientes = () => cart.some(l => l.unit == null);
+const entrega = () => document.querySelector('input[name="entrega"]:checked').value;
+const pago = () => document.querySelector('input[name="pago"]:checked').value;
+const costoEnvio = () => entrega() === "delivery" ? envio() : 0;
+const totalPedido = () => subtotal() + (costoEnvio() || 0);
+const totalCerrado = () => !pendientes() && costoEnvio() != null;
+
+function render(){
+  const n = cart.reduce((s, l) => s + l.q, 0);
+  $("#orderCount").textContent = n === 1 ? "1 producto" : `${n} productos`;
+  $("#lines").innerHTML = cart.length ? cart.map((l, i) => `
+    <div class="line">
+      <div><b>${esc(l.n)}</b>${l.extra ? `<small>${esc(l.extra)}</small>` : ""}${l.nota ? `<small>“${esc(l.nota)}”</small>` : ""}</div>
+      <span class="p num">${precio(l.unit, l.q)}</span>
+      <div class="qty"><button type="button" data-i="${i}" data-d="-1" aria-label="Quitar uno">−</button><span>${l.q}</span><button type="button" data-i="${i}" data-d="1" aria-label="Sumar uno">+</button></div>
+    </div>`).join("")
+    : `<p class="empty">Todavía no agregaste nada. Elegí de la carta y aparece acá.</p>`;
+  const del = entrega() === "delivery", env = costoEnvio();
+  $("#totals").innerHTML = `
+    <div class="s"><span>Comida</span><span>${plata(subtotal())}</span></div>
+    ${pendientes() ? `<div class="s"><span>Bebidas</span><span>A confirmar</span></div>` : ""}
+    <div class="s"><span>Envío</span><span>${!del ? "Retirás vos" : env == null ? "Lo confirma el local" : plata(env)}</span></div>
+    <div class="t"><span>${totalCerrado() ? "Total" : "Total parcial"}</span><span>${plata(totalPedido())}</span></div>`;
+  $("#send").disabled = !cart.length || pausado();
+  $("#send").textContent = pausado() ? "Pedidos en pausa" : "Hacer el pedido";
+  $("#bar").hidden = !cart.length;
+  $("#barCount").textContent = `Ver pedido (${n})`;
+  $("#barTotal").textContent = plata(totalPedido());
+  $("#dirField").hidden = !del;
+  $("#vueltoField").hidden = pago() !== "Efectivo";
+  guardar();
+}
+$("#lines").addEventListener("click", e => {
+  const b = e.target.closest("button[data-i]"); if (!b) return;
+  const l = cart[+b.dataset.i]; l.q += +b.dataset.d;
+  if (l.q <= 0) cart.splice(+b.dataset.i, 1);
+  render();
+});
+$("#form").addEventListener("change", render);
+
+// ---- ficha de producto ----
+const sheet = $("#sheet");
+document.addEventListener("click", e => {
+  const b = e.target.closest(".add[data-id]"); if (b && !b.disabled) abrirFicha(allItems[b.dataset.id]);
+});
+function abrirFicha(it){
+  const f = $("#sheetForm");
+  f.innerHTML = `
+    <button class="x" value="cancel" aria-label="Cerrar">×</button>
+    ${it.img ? `<img src="${it.img}" alt="${it.n}">` : ""}
+    <div class="sheet-in">
+      <h3 id="sheetTitle">${it.n}</h3>
+      ${it.d ? `<p>${it.d}</p>` : ""}
+      ${(it.opts || []).map((g, gi) => `
+        <div class="field"><span class="mono" style="color:var(--gris)">${g.g}</span>
+          <div class="opts">${g.o.map(([t, p], oi) => `
+            <label class="opt"><span><input type="${g.t === "radio" ? "radio" : "checkbox"}" name="g${gi}" value="${oi}" ${g.t === "radio" && oi === 0 ? "checked" : ""}>${t}</span><span class="mono num">${p && precioBase(it) != null ? "+ " + plata(p) : ""}</span></label>`).join("")}
+          </div></div>`).join("")}
+      <div class="field"><label for="f-itemnota">Nota para la cocina</label><input id="f-itemnota" name="nota" placeholder="Ej: sin cebolla, sin mayonesa"></div>
+    </div>
+    <div class="sheet-foot">
+      <div class="qty"><button type="button" data-q="-1" aria-label="Menos">−</button><span id="sq">1</span><button type="button" data-q="1" aria-label="Más">+</button></div>
+      <button class="cta" value="ok" id="sheetAdd">Agregar · <span class="num" id="sp"></span></button>
+    </div>`;
+  let q = 1;
+  const calc = () => {
+    let unit = precioBase(it), extra = [];
+    (it.opts || []).forEach((g, gi) => f.querySelectorAll(`input[name="g${gi}"]:checked`).forEach(inp => {
+      const [t, p] = g.o[+inp.value]; if (unit != null) unit += p; extra.push(t);
+    }));
+    $("#sq").textContent = q; $("#sp").textContent = precio(unit, q);
+    return { unit, extra: extra.join(" · ") };
+  };
+  f.onchange = calc;
+  f.onclick = e => { const b = e.target.closest("[data-q]"); if (b){ q = Math.max(1, q + +b.dataset.q); calc(); } };
+  calc();
+  f.onsubmit = e => {
+    if (!e.submitter || e.submitter.value !== "ok") return;
+    const { unit, extra } = calc(), nota = f.querySelector("#f-itemnota").value.trim();
+    const same = cart.find(l => l.id === it.id && l.extra === extra && l.nota === nota);
+    if (same) same.q += q; else cart.push({ id: it.id, n: it.n, unit, extra, nota, q });
+    render();
+  };
+  sheet.returnValue = "";
+  sheet.showModal();
+}
+
+// ---- celular ----
+$("#openSheet").onclick = () => document.body.classList.add("ver-pedido");
+$("#closeSheet").onclick = () => document.body.classList.remove("ver-pedido");
+
+// ---- texto del pedido (comanda) ----
+function textoPedido(o, negrita){
+  const B = s => negrita ? `*${s}*` : s;
+  const del = o.entrega === "delivery";
+  const L = [B(`PEDIDO ${o.num}`) + " — The King Burger's", ""];
+  o.items.forEach(l => {
+    L.push(`${l.q}x ${l.n}  ${precio(l.unit, l.q)}`);
+    if (l.extra) L.push(`   ${l.extra}`);
+    if (l.nota) L.push(`   Nota: ${l.nota}`);
+  });
+  L.push("");
+  if (del) L.push(`Envío: ${o.envio == null ? "a confirmar" : plata(o.envio)}`);
+  if (o.pendientes) L.push("Bebidas: precio a confirmar");
+  L.push(B(`${o.cerrado ? "Total" : "Total parcial"}: ${plata(o.total)}`), "");
+  L.push(`Nombre: ${o.nombre}`, `Celular: ${o.tel}`);
+  L.push(del ? `Delivery a: ${o.dir}` : "Retiro en el local");
+  L.push(`Pago: ${o.pago}${o.pagaCon ? ` (paga con $${o.pagaCon})` : ""}`);
+  if (o.nota) L.push(`Aclaraciones: ${o.nota}`);
+  return L.join("\n");
+}
+function armarPedido(){
+  const del = entrega() === "delivery";
+  return {
+    id: "k" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    num: "K-" + String(Math.floor(1000 + Math.random() * 9000)),
+    t: Date.now(),
+    nombre: $("#f-nombre").value.trim(),
+    tel: $("#f-tel").value.trim(),
+    entrega: del ? "delivery" : "retiro",
+    dir: del ? $("#f-dir").value.trim() : "",
+    pago: pago(),
+    pagaCon: pago() === "Efectivo" ? $("#f-vuelto").value.trim() : "",
+    nota: $("#f-nota").value.trim(),
+    items: cart.map(l => ({ id: l.id, n: l.n, q: l.q, unit: l.unit, extra: l.extra || "", nota: l.nota || "" })),
+    subtotal: subtotal(),
+    envio: del ? envio() : 0,
+    pendientes: pendientes(),
+    cerrado: totalCerrado(),
+    total: totalPedido(),
+    fueraDeHorario: !abierto(),
+  };
+}
+
+let BORRADOR = null;
+$("#send").onclick = () => {
+  const err = $("#err"); err.hidden = true;
+  const faltan = [];
+  if (!$("#f-nombre").value.trim()) faltan.push("tu nombre");
+  if (!$("#f-tel").value.trim()) faltan.push("tu celular");
+  if (entrega() === "delivery" && !$("#f-dir").value.trim()) faltan.push("la dirección");
+  if (faltan.length){ err.textContent = `Falta ${faltan.join(", ").replace(/, ([^,]*)$/, " y $1")} para poder hacer el pedido.`; err.hidden = false; return; }
+  BORRADOR = armarPedido();
+  $("#ticket").textContent = textoPedido(BORRADOR, false);
+  $("#confErr").hidden = true;
+  $("#confText").textContent = !abierto()
+    ? `Ahora estamos cerrados. Tu pedido queda en la lista y lo preparamos cuando abramos a las ${CFG.abre}.`
+    : "Así le llega a la cocina. Si está todo bien, confirmalo.";
+  $("#confGo").textContent = puedeGuardar() ? "Confirmar pedido" : "Enviar por WhatsApp";
+  $("#confGo").disabled = false;
+  $("#confirm").showModal();
+};
+$("#confBack").onclick = () => $("#confirm").close();
+$("#confGo").onclick = async () => {
+  const o = BORRADOR; if (!o) return;
+  if (!puedeGuardar()){
+    window.open(`https://wa.me/${CFG.whatsapp || WHATSAPP}?text=${encodeURIComponent(textoPedido(o, true))}`, "_blank", "noopener");
+    $("#confirm").close();
+    return;
+  }
+  const btn = $("#confGo"); btn.disabled = true; btn.textContent = "Enviando…";
+  try {
+    await setDoc(doc(FS, "pedidos", o.id), { ...o, uid: UID, estado: "nuevo", hist: { nuevo: o.t } });
+    cart = []; render();
+    document.body.classList.remove("ver-pedido");
+    misPedidos = [o, ...misPedidos].slice(0, 10);
+    guardarMios();
+    $("#confirm").close();
+    seguir(o, true);
+  } catch(e) {
+    btn.disabled = false; btn.textContent = "Confirmar pedido";
+    console.error(e);
+    $("#confErr").textContent = "No se pudo enviar el pedido. Revisá tu conexión y probá de nuevo, o escribinos por WhatsApp.";
+    $("#confErr").hidden = false;
+  }
+};
+
+// ---- seguimiento del cliente ----
+const PASOS = o => [
+  ["nuevo", "Recibido"],
+  ["cocina", "En la cocina"],
+  ["camino", o.entrega === "delivery" ? "En camino" : "Listo para retirar"],
+  ["entregado", "Entregado"],
+];
+const ORDEN = { nuevo: 0, cocina: 1, camino: 2, entregado: 3, cancelado: -1 };
+let misPedidos = [];
+try { misPedidos = JSON.parse(localStorage.getItem("kb-mios") || "[]"); } catch(e) {}
+const guardarMios = () => { try { localStorage.setItem("kb-mios", JSON.stringify(misPedidos)); } catch(e) {} };
+let trackUnsub = null, trackPedido = null, trackEstado = { estado: "nuevo" };
+
+function pintarSeguimiento(){
+  const o = trackPedido; if (!o) return;
+  const est = trackEstado.estado || "nuevo", hist = trackEstado.hist || {};
+  const pasos = PASOS(o), i = ORDEN[est];
+  $("#trackNum").textContent = `Pedido ${o.num} · ${horaDe(o.t)}`;
+  $("#trackTitle").textContent = est === "cancelado" ? "Pedido cancelado"
+    : est === "entregado" ? "¡Que lo disfrutes!" : pasos[i][1];
+  $("#trackSub").textContent = est === "cancelado" ? "El local canceló este pedido. Si tenés dudas, escribinos."
+    : est === "nuevo" ? (o.fueraDeHorario ? `Lo preparamos cuando abramos a las ${CFG.abre}.` : "El local ya lo ve en su pantalla. Esta página se actualiza sola.")
+    : "Esta página se actualiza sola.";
+  $("#trackSteps").className = "steps" + (est === "cancelado" ? " cancelado" : "");
+  $("#trackSteps").innerHTML = pasos.map(([k, label], j) =>
+    `<li class="${j < i || est === "entregado" ? "hecho" : j === i ? "actual" : ""}"><i></i><span>${label}</span><span class="mono num">${hist[k] ? horaDe(hist[k]) : ""}</span></li>`).join("");
+  $("#trackTicket").textContent = textoPedido(o, false);
+  const activo = est !== "entregado" && est !== "cancelado";
+  $("#trackBanner").hidden = !activo || location.hash === "#panel";
+  $("#trackBannerText").textContent = `Pedido ${o.num}: ${est === "nuevo" ? "recibido" : pasos[i] ? pasos[i][1].toLowerCase() : ""}`;
+}
+function seguir(o, abrir){
+  trackPedido = o; trackEstado = { estado: "nuevo" };
+  if (trackUnsub) trackUnsub();
+  trackUnsub = null;
+  if (FS && UID) trackUnsub = onSnapshot(doc(FS, "pedidos", o.id), s => {
+    if (s.exists()) { const d = s.data(); trackEstado = { estado: d.estado, hist: d.hist }; }
+    pintarSeguimiento();
+  }, () => {});
+  pintarSeguimiento();
+  if (abrir && !$("#track").open) $("#track").showModal();
+}
+$("#trackOpen").onclick = () => { pintarSeguimiento(); $("#track").showModal(); };
+$("#trackClose").onclick = () => $("#track").close();
+
+// ---- conexión con Firebase ----
+// Clientes: sesión anónima automática (no ven ningún login).
+// Personal del local: email y contraseña; su uid tiene que estar en la colección "staff".
+let FS = null, AUTH = null, UID = null, ADMIN = false, listo = false;
+const puedeGuardar = () => !!(FS && UID);
+const configurado = firebaseConfig && firebaseConfig.apiKey && !String(firebaseConfig.apiKey).startsWith("PEGAR");
+
+async function iniciar(){
+  pintarHorario(); renderCarta(); render();
+  if (!configurado) { console.warn("Firebase no está configurado: los pedidos se envían por WhatsApp."); ruta(); return; }
+  const app = initializeApp(firebaseConfig);
+  AUTH = getAuth(app); FS = getFirestore(app);
+  if (["localhost", "127.0.0.1"].includes(location.hostname) && new URLSearchParams(location.search).has("emuladores")) {
+    connectAuthEmulator(AUTH, "http://127.0.0.1:9099", { disableWarnings: true });
+    connectFirestoreEmulator(FS, "127.0.0.1", 8080);
+  }
+  onSnapshot(doc(FS, "config", "local"), s => {
+    if (s.exists()) CFG = { ...CFG, ...s.data() };
+    pintarHorario(); renderCarta(); render();
+    if (ADMIN && !cartaSucia && TAB === "carta") renderTabCarta();
+    if (ADMIN && !ajustesSucios && TAB === "ajustes") renderTabAjustes();
+  }, () => {});
+  onAuthStateChanged(AUTH, async user => {
+    if (!user) { signInAnonymously(AUTH).catch(e => console.error(e)); return; }
+    UID = user.uid;
+    ADMIN = false;
+    if (!user.isAnonymous) {
+      try { ADMIN = (await getDoc(doc(FS, "staff", user.uid))).exists(); } catch(e) {}
+    }
+    $("#panelLink").hidden = !ADMIN;
+    if (ADMIN) iniciarAdmin(); else pararAdmin();
+    const ultimo = misPedidos[0];
+    if (!listo && ultimo && Date.now() - ultimo.t < 8 * 3600e3) seguir(ultimo, false);
+    listo = true;
+    ruta();
+  });
+}
+
+// ---- ingreso del personal ----
+$("#loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = $("#loginErr"); err.hidden = true;
+  if (!AUTH) { err.textContent = "La web todavía no está conectada a Firebase."; err.hidden = false; return; }
+  const btn = $("#loginBtn"); btn.disabled = true; btn.textContent = "Entrando…";
+  try {
+    const cred = await signInWithEmailAndPassword(AUTH, $("#l-email").value.trim(), $("#l-pass").value);
+    const staff = (await getDoc(doc(FS, "staff", cred.user.uid))).exists();
+    if (!staff) { err.textContent = "Esta cuenta no tiene acceso al panel. Pedile al dueño que te agregue."; err.hidden = false; }
+    $("#l-pass").value = "";
+  } catch(e) {
+    err.textContent = ["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"].includes(e.code)
+      ? "Email o contraseña incorrectos." : "No se pudo entrar. Revisá la conexión y probá de nuevo.";
+    err.hidden = false;
+  }
+  btn.disabled = false; btn.textContent = "Entrar al panel";
+});
+$("#logout").onclick = async () => { await signOut(AUTH); history.pushState("", "", location.pathname + location.search); };
+
+// ======================= PANEL DEL LOCAL =======================
+let PEDIDOS = {}, TAB = "pedidos", PERIODO = 7, vistos = null, cartaSucia = false, ajustesSucios = false;
+const estadoDe = id => (PEDIDOS[id] && PEDIDOS[id].estado) || "nuevo";
+const histDe = id => (PEDIDOS[id] && PEDIDOS[id].hist) || {};
+
+function ruta(){
+  const quierePanel = location.hash === "#panel", panel = quierePanel && ADMIN;
+  $("#admin").hidden = !panel;
+  $("#login").hidden = !(quierePanel && !ADMIN);
+  $("#shop").hidden = quierePanel;
+  document.querySelector("footer").hidden = quierePanel;
+  if (quierePanel) { $("#trackBanner").hidden = true; if (panel) renderAdmin(); window.scrollTo(0, 0); }
+  else pintarSeguimiento();
+}
+window.addEventListener("hashchange", ruta);
+$("#toShop").onclick = e => { e.preventDefault(); history.pushState("", "", location.pathname + location.search); ruta(); };
+
+let adminUnsub = null, adminReloj = null;
+function iniciarAdmin(){
+  pararAdmin();
+  // Últimos 35 días: alcanza para el gráfico de 30 días y mantiene la lectura liviana.
+  const q = query(collection(FS, "pedidos"), where("t", ">=", Date.now() - 35 * 864e5));
+  adminUnsub = onSnapshot(q, snap => {
+    const m = {};
+    snap.docs.forEach(d => { const o = d.data(); if (o && o.items) m[d.id] = { ...o, id: d.id }; });
+    avisarNuevos(m);
+    PEDIDOS = m;
+    aviso("");
+    renderAdmin();
+  }, e => { console.error(e); aviso("No se pueden leer los pedidos en este momento. Recargá la página."); });
+  adminReloj = setInterval(() => { if (TAB === "pedidos") renderAdmin(); }, 60000);
+}
+function pararAdmin(){
+  if (adminUnsub) adminUnsub();
+  if (adminReloj) clearInterval(adminReloj);
+  adminUnsub = adminReloj = null; PEDIDOS = {}; vistos = null;
+}
+function aviso(txt){ const a = $("#adminAviso"); a.textContent = txt; a.hidden = !txt; }
+
+// sonido y título cuando entra un pedido nuevo
+let audio = null;
+document.addEventListener("pointerdown", () => { try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); } catch(e) {} }, { once: false });
+function campana(){
+  if (!audio) return;
+  [0, 0.18].forEach(d => {
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.frequency.value = 880; o.type = "sine";
+    g.gain.setValueAtTime(0.0001, audio.currentTime + d);
+    g.gain.exponentialRampToValueAtTime(0.25, audio.currentTime + d + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + d + 0.16);
+    o.connect(g).connect(audio.destination); o.start(audio.currentTime + d); o.stop(audio.currentTime + d + 0.2);
+  });
+}
+const TITULO = document.title;
+function avisarNuevos(m){
+  const ids = Object.keys(m);
+  if (vistos === null) { vistos = new Set(ids); return; }
+  const nuevos = ids.filter(id => !vistos.has(id) && !m[id].demo);
+  ids.forEach(id => vistos.add(id));
+  if (nuevos.length) { campana(); document.title = `(${nuevos.length}) Nuevo pedido · ${TITULO}`; }
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) document.title = TITULO; });
+
+document.querySelector(".tabs").addEventListener("click", e => {
+  const b = e.target.closest("[data-tab]"); if (!b) return;
+  TAB = b.dataset.tab; document.title = TITULO;
+  document.querySelectorAll(".tabs [data-tab]").forEach(x => x.setAttribute("aria-selected", x === b));
+  document.querySelectorAll(".tabpanel").forEach(p => p.hidden = p.id !== "tab-" + TAB);
+  cartaSucia = false; ajustesSucios = false;
+  renderAdmin(true);
+});
+
+function renderAdmin(forzar){
+  if (!ADMIN) return;
+  const lista = Object.values(PEDIDOS);
+  const nuevos = lista.filter(o => estadoDe(o.id) === "nuevo").length;
+  $("#badgeNuevos").hidden = !nuevos; $("#badgeNuevos").textContent = nuevos;
+  if ($("#admin").hidden) return;
+  if (TAB === "pedidos") renderTabPedidos(lista);
+  if (TAB === "ventas") renderTabVentas(lista);
+  if (TAB === "carta" && (forzar || !cartaSucia)) renderTabCarta();
+  if (TAB === "ajustes" && (forzar || !ajustesSucios)) renderTabAjustes();
+}
+
+// ---- pestaña Pedidos ----
+const SIG = { nuevo: ["cocina", "Aceptar y cocinar"], cocina: ["camino", null], camino: ["entregado", "Entregado"] };
+function hace(t){
+  const m = Math.round((Date.now() - t) / 60000);
+  if (m < 1) return "recién";
+  if (m < 60) return `hace ${m} min`;
+  const h = Math.floor(m / 60); return h < 24 ? `hace ${h} h ${m % 60} min` : diaDe(t).split("-").reverse().slice(0, 2).join("/");
+}
+const telWa = tel => { const d = String(tel || "").replace(/\D/g, ""); return d ? "598" + d.replace(/^598/, "").replace(/^0/, "") : ""; };
+function tarjeta(o){
+  const est = estadoDe(o.id), del = o.entrega === "delivery";
+  const sig = SIG[est], label = est === "cocina" ? (del ? "Salió para entregar" : "Listo para retirar") : sig && sig[1];
+  const wa = telWa(o.tel);
+  return `<article class="card ${est}" data-id="${esc(o.id)}">
+    <div class="card-top"><b>${esc(o.num)}</b><span>${horaDe(o.t)} · ${hace(o.t)}</span></div>
+    <div class="quien"><b>${esc(o.nombre)}</b>${o.demo ? ` <span class="pill demo">Ejemplo</span>` : ""}${o.fueraDeHorario ? ` <span class="pill">Fuera de horario</span>` : ""}
+      <small>${del ? "Delivery · " + esc(o.dir) : "Retira en el local"}</small>
+      <small>${esc(o.pago)}${o.pagaCon ? " · paga con $" + esc(o.pagaCon) : ""}${o.tel ? " · " + esc(o.tel) : ""}</small></div>
+    <ul>${o.items.map(l => `<li><span class="num">${l.q}x</span> ${esc(l.n)}${l.extra ? ` <span class="ex">(${esc(l.extra)})</span>` : ""}${l.nota ? `<small>${esc(l.nota)}</small>` : ""}</li>`).join("")}
+      ${o.nota ? `<li class="ex">Aclaración: ${esc(o.nota)}</li>` : ""}</ul>
+    <div class="card-foot">
+      <span class="tot">${plata(o.total)}${o.cerrado ? "" : " + a confirmar"}</span>
+      <div class="acts">
+        ${wa ? `<a class="btn" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ""}
+        <button class="btn peligro" type="button" data-cancel="${esc(o.id)}">Cancelar</button>
+        ${sig ? `<button class="btn prim" type="button" data-mover="${esc(o.id)}" data-a="${sig[0]}">${label}</button>` : ""}
+      </div>
+    </div>
+  </article>`;
+}
+function renderTabPedidos(lista){
+  const cols = [["nuevo", "Nuevos"], ["cocina", "En la cocina"], ["camino", "En camino / para retirar"]];
+  const hoy = diaDe(Date.now());
+  const cerradosHoy = lista.filter(o => ["entregado", "cancelado"].includes(estadoDe(o.id)) && diaDe(o.t) === hoy).sort((a, b) => b.t - a.t);
+  $("#tab-pedidos").innerHTML = `
+    <div class="board">${cols.map(([k, nom]) => {
+      const os = lista.filter(o => estadoDe(o.id) === k).sort((a, b) => a.t - b.t);
+      return `<section class="col"><h2>${nom} <span class="mono num">${os.length}</span></h2>
+        <div class="cards">${os.length ? os.map(tarjeta).join("") : `<div class="col-empty">${k === "nuevo" ? "Sin pedidos nuevos. Cuando entre uno, suena un aviso y aparece acá." : "Nada por ahora."}</div>`}</div></section>`;
+    }).join("")}</div>
+    <section class="hist"><h2>Cerrados hoy</h2>
+      ${cerradosHoy.length ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Pedido</th><th>Hora</th><th>Cliente</th><th>Entrega</th><th>Estado</th><th class="r">Total</th></tr></thead><tbody>
+      ${cerradosHoy.map(o => `<tr><td class="num">${esc(o.num)}</td><td class="num">${horaDe(o.t)}</td><td>${esc(o.nombre)}</td><td>${o.entrega === "delivery" ? "Delivery" : "Retiro"}</td><td>${estadoDe(o.id) === "entregado" ? "Entregado" : "Cancelado"}</td><td class="r">${plata(o.total)}</td></tr>`).join("")}
+      </tbody></table></div>` : `<p class="col-empty" style="text-align:left">Todavía no se cerró ningún pedido hoy.</p>`}
+    </section>`;
+}
+let cancelPend = null;
+$("#tab-pedidos").addEventListener("click", async e => {
+  const mv = e.target.closest("[data-mover]"), cn = e.target.closest("[data-cancel]");
+  if (cn) {
+    if (cancelPend !== cn.dataset.cancel) { cancelPend = cn.dataset.cancel; cn.textContent = "¿Cancelar? Tocá de nuevo"; return; }
+    cancelPend = null; await moverPedido(cn.dataset.cancel, "cancelado", cn);
+  }
+  if (mv) await moverPedido(mv.dataset.mover, mv.dataset.a, mv);
+});
+async function moverPedido(id, estado, btn){
+  btn.disabled = true;
+  try {
+    await updateDoc(doc(FS, "pedidos", id), { estado, hist: { ...histDe(id), [estado]: Date.now() } });
+    aviso("");
+  } catch(e) { btn.disabled = false; aviso("No se pudo cambiar el estado. Probá de nuevo."); }
+}
+
+// ---- pestaña Ventas ----
+function renderTabVentas(lista){
+  const hoy = diaDe(Date.now());
+  const entregados = lista.filter(o => estadoDe(o.id) === "entregado");
+  const desde = Date.now() - (PERIODO - 1) * 864e5;
+  const dias = []; for (let i = PERIODO - 1; i >= 0; i--) dias.push(diaDe(Date.now() - i * 864e5));
+  const enPeriodo = entregados.filter(o => dias.includes(diaDe(o.t)));
+  const sum = os => os.reduce((s, o) => s + (o.total || 0), 0);
+  const hoyE = entregados.filter(o => diaDe(o.t) === hoy);
+  const enCurso = lista.filter(o => ["nuevo", "cocina", "camino"].includes(estadoDe(o.id)));
+  const cancel = lista.filter(o => estadoDe(o.id) === "cancelado" && dias.includes(diaDe(o.t))).length;
+  const porDia = dias.map(d => { const os = enPeriodo.filter(o => diaDe(o.t) === d); return { d, v: sum(os), n: os.length }; });
+  const max = Math.max(1, ...porDia.map(x => x.v));
+  const fmtDia = d => new Intl.DateTimeFormat("es-UY", { timeZone: "UTC", weekday: "short", day: "numeric", month: "short" }).format(new Date(d + "T12:00:00Z"));
+  const prod = {};
+  enPeriodo.forEach(o => o.items.forEach(l => { const p = prod[l.n] || (prod[l.n] = { q: 0, v: 0 }); p.q += l.q; p.v += l.unit == null ? 0 : l.unit * l.q; }));
+  const top = Object.entries(prod).sort((a, b) => b[1].q - a[1].q).slice(0, 8);
+  const topMax = Math.max(1, ...top.map(t => t[1].q));
+  const contar = key => { const c = {}; enPeriodo.forEach(o => { const k = key(o); c[k] = (c[k] || 0) + 1; }); return Object.entries(c).sort((a, b) => b[1] - a[1]); };
+  const pagos = contar(o => o.pago), entregas = contar(o => o.entrega === "delivery" ? "Delivery" : "Retiro en el local");
+  const hbars = (rows, tot) => rows.map(([k, n]) => `<div class="hbar"><span>${esc(k)}</span><span class="v num">${n} · ${Math.round(n / tot * 100)}%</span><div class="track"><span style="width:${n / tot * 100}%"></span></div></div>`).join("");
+  $("#tab-ventas").innerHTML = `
+    <div class="periodo" role="group" aria-label="Período">
+      ${[7, 30].map(p => `<button type="button" class="btn" data-periodo="${p}" aria-pressed="${PERIODO === p}">Últimos ${p} días</button>`).join("")}
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span class="mono">Vendido hoy</span><b class="num">${plata(sum(hoyE))}</b><small>${hoyE.length} pedidos entregados</small></div>
+      <div class="kpi"><span class="mono">Vendido en ${PERIODO} días</span><b class="num">${plata(sum(enPeriodo))}</b><small>${enPeriodo.length} pedidos · ${cancel} cancelados</small></div>
+      <div class="kpi"><span class="mono">Ticket promedio</span><b class="num">${enPeriodo.length ? plata(sum(enPeriodo) / enPeriodo.length) : "—"}</b><small>por pedido entregado</small></div>
+      <div class="kpi"><span class="mono">En curso ahora</span><b class="num">${plata(sum(enCurso))}</b><small>${enCurso.length} pedidos sin entregar</small></div>
+    </div>
+    ${enPeriodo.length ? `
+    <div class="chart">
+      <h2>Ventas por día</h2>
+      <p>Pedidos entregados, en pesos. Pasá el mouse por una barra para ver el detalle.</p>
+      <div class="bars" role="img" aria-label="Ventas por día de los últimos ${PERIODO} días">
+        ${porDia.map(x => `<div class="b" tabindex="0"><span style="height:${x.v / max * 100}%"></span><em class="tip">${fmtDia(x.d)} · ${plata(x.v)} · ${x.n} ped.</em></div>`).join("")}
+      </div>
+      <div class="xlab">${porDia.map((x, i) => `<span>${PERIODO <= 7 || i % 5 === 0 || i === porDia.length - 1 ? x.d.slice(8) + "/" + x.d.slice(5, 7) : ""}</span>`).join("")}</div>
+    </div>
+    <div class="grid2">
+      <section><h2 style="font-size:15px;margin:0 0 8px">Lo más pedido</h2>
+        ${top.map(([n, p]) => `<div class="hbar"><span>${esc(n)}</span><span class="v num">${p.q} u · ${plata(p.v)}</span><div class="track"><span style="width:${p.q / topMax * 100}%"></span></div></div>`).join("")}
+      </section>
+      <section><h2 style="font-size:15px;margin:0 0 8px">Cómo pagan</h2>${hbars(pagos, enPeriodo.length)}
+        <h2 style="font-size:15px;margin:24px 0 8px">Cómo reciben</h2>${hbars(entregas, enPeriodo.length)}
+      </section>
+    </div>
+    <details style="margin-top:28px"><summary class="mono" style="cursor:pointer;color:var(--gris)">Ver la tabla por día</summary>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Día</th><th class="r">Pedidos</th><th class="r">Vendido</th></tr></thead><tbody>
+      ${porDia.slice().reverse().map(x => `<tr><td>${fmtDia(x.d)}</td><td class="r">${x.n}</td><td class="r">${plata(x.v)}</td></tr>`).join("")}</tbody></table></div>
+    </details>` : `<p class="col-empty" style="text-align:left">Todavía no hay pedidos entregados en este período. Cuando marques un pedido como entregado, sus ventas aparecen acá.</p>`}`;
+}
+$("#tab-ventas").addEventListener("click", e => {
+  const b = e.target.closest("[data-periodo]"); if (!b) return;
+  PERIODO = +b.dataset.periodo; renderAdmin();
+});
+
+// ---- pestaña Carta y precios ----
+function renderTabCarta(){
+  $("#tab-carta").innerHTML = `<p style="color:var(--gris);margin:0 0 20px;max-width:60ch">Cambiá un precio o marcá un producto como agotado. Los clientes ven el cambio apenas guardás.</p>
+    ${MENU.map(c => `<section class="carta-cat"><h2>${c.nombre}</h2>
+      ${c.items.map(i => `<div class="crow${agotado(i.id) ? " agotado" : ""}" data-id="${i.id}">
+        <span class="nom">${i.n}${i.opts && i.opts[0].g === "Porción" ? ` <span class="mono" style="color:var(--gris)">p/1</span>` : ""}</span>
+        <input type="number" min="0" step="10" inputmode="numeric" id="precio-${i.id}" value="${precioBase(i) ?? ""}" placeholder="Sin precio" aria-label="Precio de ${i.n}">
+        <label class="toggle"><input type="checkbox" id="disp-${i.id}" ${agotado(i.id) ? "" : "checked"}> Disponible</label>
+      </div>`).join("")}</section>`).join("")}
+    <div class="savebar"><span id="cartaEstado">Sin cambios</span><button type="button" class="cta" id="cartaGuardar">Guardar cambios</button></div>`;
+}
+$("#tab-carta").addEventListener("input", e => {
+  cartaSucia = true; $("#cartaEstado").textContent = "Hay cambios sin guardar";
+  const row = e.target.closest(".crow"); if (row && e.target.type === "checkbox") row.classList.toggle("agotado", !e.target.checked);
+});
+$("#tab-carta").addEventListener("click", async e => {
+  if (e.target.id !== "cartaGuardar") return;
+  const precios = {}, agotados = [];
+  MENU.forEach(c => c.items.forEach(i => {
+    const v = $("#precio-" + i.id).value.trim();
+    if (v !== "" && +v !== i.p) precios[i.id] = +v;
+    if (!$("#disp-" + i.id).checked) agotados.push(i.id);
+  }));
+  await guardarConfig({ precios, agotados }, "#cartaEstado", () => { cartaSucia = false; });
+});
+async function guardarConfig(cambios, estadoSel, ok){
+  const el = $(estadoSel); el.textContent = "Guardando…";
+  try {
+    const nuevo = { ...CFG, ...cambios };
+    await setDoc(doc(FS, "config", "local"), nuevo);
+    CFG = nuevo; ok && ok(); el.textContent = "Guardado"; pintarHorario(); renderCarta(); render();
+  } catch(e) { el.textContent = "No se pudo guardar. Probá de nuevo."; }
+}
+
+// ---- pestaña Ajustes ----
+function renderTabAjustes(){
+  const demos = Object.values(PEDIDOS).filter(o => o.demo).length;
+  $("#tab-ajustes").innerHTML = `<div class="ajustes">
+    <section><h2>Recibir pedidos</h2><p>En automático, la web abre y cierra sola según el horario. Pausá los pedidos si se llena la cocina.</p>
+      <div class="seg tres">
+        ${[["auto", "Según horario"], ["abierto", "Abierto ahora"], ["pausado", "Pausar pedidos"]].map(([v, l]) => `<input type="radio" name="modo" id="m-${v}" value="${v}" ${CFG.modo === v ? "checked" : ""}><label for="m-${v}">${l}</label>`).join("")}
+      </div>
+      <div class="row2">
+        <div class="field"><label for="a-abre">Abre</label><input type="time" id="a-abre" value="${esc(CFG.abre)}"></div>
+        <div class="field"><label for="a-cierra">Cierra</label><input type="time" id="a-cierra" value="${esc(CFG.cierra)}"></div>
+      </div>
+    </section>
+    <section><h2>Delivery</h2><p>Si lo dejás vacío, el cliente ve "lo confirma el local" y el total queda parcial.</p>
+      <div class="field"><label for="a-envio">Costo de envío ($)</label><input type="number" min="0" step="10" inputmode="numeric" id="a-envio" value="${envio() ?? ""}" placeholder="A confirmar"></div>
+    </section>
+    <section><h2>WhatsApp del local</h2><p>Se usa como respaldo si la web no puede guardar el pedido.</p>
+      <div class="field"><label for="a-wa">Número con código de país</label><input id="a-wa" inputmode="numeric" value="${esc(CFG.whatsapp || "")}" placeholder="59899123456"></div>
+    </section>
+    <div class="savebar" style="position:static;border:0;padding:0"><span id="ajEstado">Sin cambios</span><button type="button" class="cta" id="ajGuardar">Guardar ajustes</button></div>
+    <section style="border:0"><h2>Pedidos de ejemplo</h2>
+      <p>Para mostrar el panel funcionando: carga 30 pedidos de prueba de las últimas dos semanas, marcados como "Ejemplo". Se borran con un toque y no hacen sonar el aviso.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn" id="demoCargar">Cargar pedidos de ejemplo</button>
+        <button type="button" class="btn peligro" id="demoBorrar" ${demos ? "" : "disabled"}>Borrar ${demos || ""} pedidos de ejemplo</button>
+      </div>
+      <span id="demoEstado" class="mono" style="color:var(--gris)"></span>
+    </section>
+  </div>`;
+}
+$("#tab-ajustes").addEventListener("input", e => { if (e.target.closest(".ajustes section") && !e.target.closest("#demoCargar")) { ajustesSucios = true; $("#ajEstado").textContent = "Hay cambios sin guardar"; } });
+$("#tab-ajustes").addEventListener("change", e => { ajustesSucios = true; const s = $("#ajEstado"); if (s) s.textContent = "Hay cambios sin guardar"; });
+$("#tab-ajustes").addEventListener("click", async e => {
+  if (e.target.id === "ajGuardar") {
+    const env = $("#a-envio").value.trim();
+    await guardarConfig({
+      modo: document.querySelector('input[name="modo"]:checked').value,
+      abre: $("#a-abre").value || "20:30", cierra: $("#a-cierra").value || "00:00",
+      envio: env === "" ? null : +env,
+      whatsapp: $("#a-wa").value.replace(/\D/g, "") || WHATSAPP,
+    }, "#ajEstado", () => { ajustesSucios = false; });
+  }
+  if (e.target.id === "demoCargar") await cargarDemo(e.target);
+  if (e.target.id === "demoBorrar") await borrarDemo(e.target);
+});
+
+async function cargarDemo(btn){
+  btn.disabled = true; $("#demoEstado").textContent = "Cargando…";
+  const conPrecio = MENU.flatMap(c => c.items).filter(i => i.p != null);
+  const r = n => Math.floor(Math.random() * n);
+  const pagos = ["Efectivo", "Efectivo", "Transferencia", "Tarjeta (POS)"];
+  const pedidos = {};
+  for (let k = 0; k < 30; k++) {
+    const hoy = k >= 27, diasAtras = hoy ? 0 : 1 + r(14);
+    // pedidos de días anteriores entre las 20:45 y las 23:45 (hora de Uruguay); los de hoy, hace pocos minutos
+    const t = hoy ? Date.now() - (30 - k) * 7 * 60000
+      : Date.parse(diaDe(Date.now() - diasAtras * 864e5) + "T20:45:00-03:00") + r(180) * 60000;
+    const items = []; const n = 1 + r(3);
+    for (let j = 0; j < n; j++) { const it = conPrecio[r(conPrecio.length)], q = 1 + (r(4) === 0 ? 1 : 0);
+      items.push({ id: it.id, n: it.n, q, unit: it.p, extra: it.opts && it.opts[0].g === "Porción" ? "Para 1" : "", nota: "" }); }
+    const del = r(3) > 0, sub = items.reduce((s, l) => s + l.unit * l.q, 0);
+    const est = hoy ? ["nuevo", "cocina", "camino"][k - 27] : (r(15) === 0 ? "cancelado" : "entregado");
+    const id = "demo" + t.toString(36) + k;
+    pedidos[id] = { id, num: "K-" + (1000 + r(9000)), t, nombre: `Cliente de ejemplo ${k + 1}`, tel: "", entrega: del ? "delivery" : "retiro",
+      dir: del ? "Dirección de ejemplo" : "", pago: pagos[r(4)], pagaCon: "", nota: "", items, subtotal: sub, envio: 0,
+      pendientes: false, cerrado: true, total: sub, demo: true, uid: UID, estado: est, hist: { nuevo: t, [est]: t + 25 * 60000 } };
+  }
+  try {
+    const lote = writeBatch(FS);
+    Object.values(pedidos).forEach(o => lote.set(doc(FS, "pedidos", o.id), o));
+    await lote.commit();
+    $("#demoEstado").textContent = "Listo: mirá las pestañas Pedidos y Ventas.";
+  } catch(e) { console.error(e); $("#demoEstado").textContent = "No se pudieron cargar. Probá de nuevo."; }
+  btn.disabled = false;
+}
+async function borrarDemo(btn){
+  if (btn.dataset.ok !== "1") { btn.dataset.ok = "1"; btn.textContent = "¿Borrar? Tocá de nuevo"; return; }
+  btn.disabled = true; $("#demoEstado").textContent = "Borrando…";
+  try {
+    const snap = await getDocs(query(collection(FS, "pedidos"), where("demo", "==", true)));
+    const lote = writeBatch(FS);
+    snap.docs.forEach(d => lote.delete(d.ref));
+    await lote.commit();
+    $("#demoEstado").textContent = "Pedidos de ejemplo borrados.";
+  } catch(e) { $("#demoEstado").textContent = "No se pudieron borrar. Probá de nuevo."; btn.disabled = false; }
+}
+
+iniciar();
+</script>
