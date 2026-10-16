@@ -3,10 +3,10 @@
 // Estos valores NO son secretos: identifican el proyecto. La seguridad la dan las reglas de firestore.rules.
 // Mientras apiKey diga "PEGAR...", la web funciona igual pero los pedidos se envían por WhatsApp.
 export const firebaseConfig = {
-  apiKey: "PEGAR_API_KEY",
-  authDomain: "PEGAR.firebaseapp.com",
-  projectId: "PEGAR_PROJECT_ID",
-  storageBucket: "PEGAR.appspot.com",
-  messagingSenderId: "PEGAR",
-  appId: "PEGAR",
+  apiKey: "AIzaSyB2cIH6G1dTTWH7tSNI1oqnd5H3zM49msE",
+  authDomain: "kings-burger-725ae.firebaseapp.com",
+  projectId: "kings-burger-725ae",
+  storageBucket: "kings-burger-725ae.firebasestorage.app",
+  messagingSenderId: "538488700826",
+  appId: "1:538488700826:web:53e1c1e0405293e5c54423",
 };

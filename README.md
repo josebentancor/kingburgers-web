@@ -36,7 +36,7 @@ Mientras Firebase no esté configurado, la web funciona igual. En ese caso el bo
      ```bash
      npm install -g firebase-tools
      firebase login
-     firebase use --add
+     firebase use kings-burger-725ae
      firebase deploy --only firestore:rules
      ```
 
